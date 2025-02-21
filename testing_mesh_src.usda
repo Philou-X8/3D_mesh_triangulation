@@ -1,0 +1,46 @@
+#usda 1.0
+(
+    defaultPrim = "Cube1"
+)
+def Xform "Cube1"
+{
+    matrix4d xformOp:transform = ( (1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1) )
+    uniform token[] xformOpOrder = ["xformOp:transform"]
+
+    def Mesh "Cube1_Mesh"
+    {
+        float3[] extent = [(0, 0, 0), (1, 1, 1)]
+        int[] faceVertexCounts = [4, 4, 3, 5]
+        int[] faceVertexIndices = [0,1,2,3, 1,4,5,2, 4,1,0, 3,2,5,6,7]
+        point3f[] points = [(0, 0, 1), (1, 0.1, 1), (1, 1, 1), (0, 1, 1), (1, 0, 0), (1, 1, 0), (0.5,1,0), (0,1,0.5)]
+        int[] primvars:test_faceVar_direct = [10,11,12,13, 20,21,22,23, 30,31,32, 40,41,42,43,44] (
+            interpolation = "faceVarying"
+        )
+        int[] primvars:test_faceVar_index = [10,11,12,13,14] (
+            interpolation = "faceVarying"
+        )
+        int[] primvars:test_faceVar_index:indices = [0,1,2,3, 0,1,2,3, 0,1,2, 0,1,2,3,4]
+
+        int[] primvars:test_uniform_direct = [11,22,33,44] (
+            interpolation = "uniform"
+        )
+        int[] primvars:test_uniform_index = [10,11,12,13,14,15] (
+            interpolation = "uniform"
+        )
+        int[] primvars:test_uniform_index:indices = [0,1,2,3]
+
+        int[] primvars:test_vertex_direct = [0,1,2,3,4,5,6,7] (
+            interpolation = "vertex"
+        )
+        int[] primvars:test_vertex_index = [10,11,12,13,14,15,16,17] (
+            interpolation = "vertex"
+        )
+        int[] primvars:test_vertex_index:indices = [0,1,2,3,4,5,6,7]
+        
+        color3f[] primvars:displayColor = [(1,0,0),(1,1,0),(0,1,0),(0,1,1), (1,0,0),(1,1,0),(0,1,0),(0,1,1), (1,0,0),(1,1,0),(0,1,0), (1,0,0),(1,1,0),(0,1,0),(0,1,1),(0,0,1)] (
+            interpolation = "faceVarying"
+        )
+        uniform token subdivisionScheme = "none"
+    }
+
+}
