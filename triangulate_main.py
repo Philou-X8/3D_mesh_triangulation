@@ -1,9 +1,28 @@
+'''
+-----------------------------------------------------------------------------------------
+File: triangulate_main.py
+source: https://github.com/Philou-X8/3D_mesh_triangulation
+
+[triangulate_main.py] is responsible for reading, writing and traversing USD files.
+-----------------------------------------------------------------------------------------
+'''
+
 from pxr import Usd, UsdGeom
 from triangulate_quad import *
 from triangulate_ngon import *
 
 
 def CreateStage(baseFileName : str, outFileName : str = 'testing_mesh_dst.usda', containerFile : str = 'testing_mesh_container.usda') -> Usd.Stage:
+    """
+    Open and create the USD files.
+
+    args:
+        baseFileName - Name of the file to read from.
+        outFileName - Name of the file to write to.
+        containerFile - Name of a container file where both USD are overlapped for easy comparison. (Can be empty to skip.)
+    return:
+        Usd.Stage - USD Stage for triangulated meshes.
+    """
     baseStage = Usd.Stage.Open(baseFileName)
     baseIdentifier = baseStage.GetRootLayer().identifier
 
@@ -23,6 +42,15 @@ def CreateStage(baseFileName : str, outFileName : str = 'testing_mesh_dst.usda',
 
 
 def TriangulateMesh(mesh : UsdGeom.Mesh):
+    """
+    Triangulate a mesh and regenerate Lookup Tables for primvars of this mesh
+
+    args:
+        mesh - mesh to triangulate.
+    return:
+        lookup_uniform (list) - LUT used to triangulate attribute/primvars of uniform interpolation.
+        lookup_faceVarying (list) - LUT used to triangulate attribute/primvars of faceVarying interpolation.
+    """
     src_counts = mesh.GetFaceVertexCountsAttr().Get()
     src_indicies = mesh.GetFaceVertexIndicesAttr().Get()
     src_points = mesh.GetPointsAttr().Get()
@@ -51,6 +79,18 @@ def TriangulateMesh(mesh : UsdGeom.Mesh):
 
 
 def GetNextFace(src_counts, src_indicies, src_points):
+    """
+    For iterating through a mesh and dividing it up in polygons.
+
+    args:
+        src_counts - list of number of side per face.
+        src_indicies - list of all vertex indicies.
+        src_points - list of points of the mesh.
+    return:
+        faceOffset (int) - index of the face.
+        vertOffset (int) - index of the first vertex of the face.
+        subPoints (list) - list of points making up the face.
+    """
     faceOffset = 0
     vertOffset = 0
     while vertOffset < len(src_indicies):
@@ -63,6 +103,15 @@ def GetNextFace(src_counts, src_indicies, src_points):
 
 
 def TriangulateFace(points):
+    """
+    Triangulate a face.
+
+    args:
+        points - list of points making up the face.
+    return:
+        faceCounts (list) - list of number of side per generated triangles.
+        cornerIDs (list) - list pointing to vertex of the original polygon.
+    """
     sideCount = len(points)
     faceCounts = []
     cornerIDs = []
@@ -81,6 +130,9 @@ def TriangulateFace(points):
 
 
 def UpdatePrimvar(primvar : UsdGeom.Primvar, lookup):
+    """
+    Apply the triangulation to a primvar
+    """
     lookup_uniform, lookup_faceVarying = lookup
     src_primvar = []
     dst_primvar = []
@@ -106,6 +158,9 @@ def UpdatePrimvar(primvar : UsdGeom.Primvar, lookup):
 
 
 def UpdadeNormalsAttr(mesh : UsdGeom.Mesh, lookup):
+    """
+    Apply the triangulation to the Normals attribute
+    """
     if src_normals := mesh.GetNormalsAttr().Get():
         lookup_uniform, lookup_faceVarying = lookup
         if mesh.GetNormalsInterpolation() == UsdGeom.Tokens.faceVarying:

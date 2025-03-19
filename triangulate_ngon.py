@@ -71,7 +71,8 @@ class CornerListItem:
             alignmentScore = self.alignement * ( remain**2)
             diagonalScore = ( 1.0 - (self.diagonal / longestSide) )
             self.score = ( 1.0 * self.sharpness) + ( 1.0 * alignmentScore ) + (0.5 * diagonalScore)
-
+            cornerStr = str(self.centerCornerId) + " [" + str(self.sharpness) + ", " + str(alignmentScore) + ", " + str(diagonalScore) + "] ,"
+            print(cornerStr)
             self.status = CornerStatus.valid
         
         return self.score
@@ -153,6 +154,7 @@ class NgonSplitter:
     def FindBest(self) -> CornerListItem:
         bestScore = -5
         bestId = 0
+        scoreStr = ""
         for corner, remain in self.corners.TraverseRemaining():
             # terminate early for the last triangle, it's ugly but faster
             if self.corners.itemListSize <= 3:
@@ -162,6 +164,8 @@ class NgonSplitter:
             if score > bestScore:
                 bestScore = score
                 bestId = corner.centerCornerId
+            scoreStr += "[" + str(corner.centerCornerId) + " , " + str(score) + "] , "
+        print("\n" + scoreStr + "\n")
         return bestId
     
     def Triangulate(self):

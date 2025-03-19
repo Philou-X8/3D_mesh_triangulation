@@ -1,6 +1,7 @@
 #usda 1.0
 (
     defaultPrim = "Cube1"
+    metersPerUnit = 1
 )
 def Xform "Cube1"
 {
