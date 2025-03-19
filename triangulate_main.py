@@ -13,10 +13,11 @@ def CreateStage(baseFileName : str, outFileName : str = 'testing_mesh_dst.usda',
     outIdentifier = writeStage.GetRootLayer().identifier
     
     # make container file
-    container = Usd.Stage.CreateNew(containerFile)
-    container.GetRootLayer().subLayerPaths.append(outIdentifier)
-    container.GetRootLayer().subLayerPaths.append(baseIdentifier)
-    container.GetRootLayer().Save()
+    if (containerFile != None) and (containerFile != ''):
+        container = Usd.Stage.CreateNew(containerFile)
+        container.GetRootLayer().subLayerPaths.append(outIdentifier)
+        container.GetRootLayer().subLayerPaths.append(baseIdentifier)
+        container.GetRootLayer().Save()
 
     return writeStage
 

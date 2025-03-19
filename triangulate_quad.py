@@ -2,23 +2,15 @@ from pxr import Gf
 
 
 def SplitQuad(points):
-    sidesVect = [
-        Gf.Vec3f(points[1]-points[0]),
-        Gf.Vec3f(points[2]-points[1]),
-        Gf.Vec3f(points[3]-points[2]),
-        Gf.Vec3f(points[0]-points[3]),
-    ]
+    vectAB = Gf.Vec3f(points[1]-points[0]).GetNormalized()
+    vectBC = Gf.Vec3f(points[2]-points[1]).GetNormalized()
+    vectCD = Gf.Vec3f(points[3]-points[2]).GetNormalized()
+    vectDA = Gf.Vec3f(points[0]-points[3]).GetNormalized()
     
-    scoreA = Gf.Vec3f.GetDot(
-        sidesVect[0] - sidesVect[2], 
-        sidesVect[1] - sidesVect[3]
-        )
-    scoreB = Gf.Vec3f.GetDot(
-        sidesVect[1] - sidesVect[3], 
-        sidesVect[2] - sidesVect[0]
-        )
+    splitBD = Gf.Vec3f.GetDot(vectAB-vectCD, vectBC-vectDA)
+    splitAC = Gf.Vec3f.GetDot(vectBC-vectDA, vectCD-vectAB)
 
-    if scoreA >= scoreB:
+    if splitBD >= splitAC:
         return [3,3], [3,0,1, 1,2,3]
     else:
         return [3,3], [0,1,2, 2,3,0]
