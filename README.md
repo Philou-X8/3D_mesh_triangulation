@@ -3,20 +3,26 @@ Documentation is still WIP
 This script is a solution to the challenge of triangulating a mesh containing polygons of weird shape and side count. It uses the Universal Scene Description (USD) format to represent 3D models.
 
 ### Table Of Content
-1. Triangulation process
+1. [Triangulation process](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#triangulation-process)
 
-    1.1 N-gon triangulation
+    1.1 [N-gon triangulation](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#n-gon-triangulation)
 
-    1.2 Quad triangulation
+    1.2 [Quad triangulation](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#quad-triangulation)
 
-2. Code implementation
+2. [Code implementation](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#code-implementation)
+
+    2.1 [main](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#main.py)
+
+    2.2 [quad](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#quad.py)
+
+    2.3 [n-gon](https://github.com/Philou-X8/3D_mesh_triangulation/tree/main?tab=readme-ov-file#ngon.py)
 
 
 # Triangulation Process
 Two triangulation algorithm are offered: one for quads and one for n-gon.
 
 ## N-gon triangulation
-The triangulation algorithm of n-gon is inspired by the ear clipping algorithm for triangulating 2D polygons. The full refeference can be found [https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf](here).
+The triangulation algorithm of n-gon is inspired by the ear clipping algorithm for triangulating 2D polygons. The full refeference can be found [here](https://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf).
 
 Simply put, if you take any corner of the polygon, you can form a triangle with this corner and its two adjacent corners. 
 Then, if you remove this corner, you can close the polygon by conecting the left adjacent corner to the right adjacent corner.
@@ -69,10 +75,10 @@ The quad is split along the diagonal with the highest (most positive) score.
 general information
 
 ## main.py
-[triangulate_main.py]() is responsible for reading, writing and traversing USD files. Individual faces are passed to [triangulate_ngon.py]() or [triangulate_main.py]() for the triangulation process.
+[triangulate_main.py](https://github.com/Philou-X8/3D_mesh_triangulation/blob/main/triangulate_main.py) is responsible for reading, writing and traversing USD files. Individual faces are passed to [triangulate_ngon.py](https://github.com/Philou-X8/3D_mesh_triangulation/blob/main/triangulate_ngon.py) or [triangulate_quad.py](https://github.com/Philou-X8/3D_mesh_triangulation/blob/main/triangulate_quad.py) for the triangulation process.
 
 ## quad.py
-[triangulate_quads.py]() offer a light but efficient way of triangulating quads (4 sided polygons). It ensure that concave polygons are respected by choosing the best diagonal.
+[triangulate_quad.py](https://github.com/Philou-X8/3D_mesh_triangulation/blob/main/triangulate_quad.py) offer a light but efficient way of triangulating quads (4 sided polygons). It ensure that concave polygons are respected by choosing the best diagonal.
 
 ## ngon.py
-[triangulate_ngon.py]() triangulate n-gon (polygons with more than 4 sides) in the most natural way it can. Once again, concavity is respected.
+[triangulate_ngon.py](https://github.com/Philou-X8/3D_mesh_triangulation/blob/main/triangulate_ngon.py) triangulate n-gon (polygons with more than 4 sides) in the most natural way it can. Once again, concavity is respected.
